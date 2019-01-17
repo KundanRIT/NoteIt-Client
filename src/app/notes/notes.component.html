@@ -1,0 +1,69 @@
+<div class="container">
+  <!--Note Menu-->
+  <div class="row" style="margin-top: 12px">
+    <div class="col-md-8">
+      <input
+        [(ngModel)]="searchText"
+        type="text"
+        class="form-control"
+        style="width: 100%"
+        placeholder="Search Notes ..."
+      >
+    </div>
+    <div class="col-md-4">
+      <button type="button" (click)="createNote()" class="btn btn-info pull-left" style="margin-left: 12px"
+              [disabled]="selectedNotebook == null"
+      >
+        <i class="fa fa-plus"></i>
+        <span> New Note</span>
+      </button>
+      <button type="button" (click)="createNotebook()" class="btn btn-warning pull-left" style="margin-left: 12px">
+        <i class="fa fa-plus"></i>
+        <span> New Notebook</span>
+      </button>
+    </div>
+  </div>
+
+  <!--Notes Content-->
+  <div class="row" style="margin-top: 28px">
+    <!--Notebook Panel-->
+    <div class="col-md-3">
+      <br>
+      <div class="list-group list-group-flush">
+        <a (click)="selectAllNotebook()" class="list-group-item list-group-item-action">
+          <i class="fa fa-book"></i>&nbsp;
+          All
+        </a>
+        <!--Notebook List-->
+        <a *ngFor="let notebook of notebooks" (click)="selectNotebook(notebook)" class="list-group-item list-group-item-action">
+          <i class="fa fa-book"></i>&nbsp;
+          <input [(ngModel)]="notebook.name" (change)="updateNotebook(notebook)" type="text" class="input-label" style="width: 80%">
+          <a (click)="deleteNotebook(notebook)" class="pull-right text-danger">
+            <i class="fa fa-trash-o"></i>
+          </a>
+        </a>
+      </div>
+    </div>
+
+    <!--Note Panel-->
+    <div class="col-md-9">
+      <h3 *ngIf="selectedNotebook == null">All Notes</h3>
+      <h3 *ngIf="selectedNotebook != null">{{this.selectedNotebook.name}}</h3>
+      <div class="row">
+        <div class="col-md-12">
+          <!--No Notes-->
+          <p *ngIf="this.notes.length === 0">There are no notes to display !</p>
+        </div>
+      </div>
+      <div class="row">
+        <!--Note List-->
+        <app-note
+          *ngFor="let note of notes | searchFilter:searchText"
+          [note]="note"
+          (noteUpdated)="updateNote($event)"
+          (noteDeleted)="deleteNote($event)"
+        ></app-note>
+      </div>
+    </div>
+  </div>
+</div>
